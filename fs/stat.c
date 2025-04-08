@@ -317,7 +317,6 @@ SYSCALL_DEFINE2(newlstat, const char __user *, filename,
 	error = vfs_lstat(filename, &stat);
 	if (error)
 		return error;
-
 	return cp_new_stat(&stat, statbuf);
 }
 
