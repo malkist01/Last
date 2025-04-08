@@ -290,6 +290,10 @@ static int cp_new_stat(struct kstat *stat, struct stat __user *statbuf)
 	return copy_to_user(statbuf,&tmp,sizeof(tmp)) ? -EFAULT : 0;
 }
 
+#ifdef CONFIG_KSU
+extern int ksu_handle_stat(int *dfd, const char __user **filename_user, int *flags);
+#endif
+
 SYSCALL_DEFINE2(newstat, const char __user *, filename,
 		struct stat __user *, statbuf)
 {
@@ -307,6 +311,9 @@ SYSCALL_DEFINE2(newlstat, const char __user *, filename,
 	struct kstat stat;
 	int error;
 
+#ifdef CONFIG_KSU
+ 	ksu_handle_stat(&dfd, &filename, &flag);
+#endif
 	error = vfs_lstat(filename, &stat);
 	if (error)
 		return error;
@@ -463,6 +470,9 @@ SYSCALL_DEFINE4(fstatat64, int, dfd, const char __user *, filename,
 	struct kstat stat;
 	int error;
 
+#ifdef CONFIG_KSU
+ 	ksu_handle_stat(&dfd, &filename, &flag); /* 32-bit su */
+#endif
 	error = vfs_fstatat(dfd, filename, &stat, flag);
 	if (error)
 		return error;
