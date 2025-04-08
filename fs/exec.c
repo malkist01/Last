@@ -1732,6 +1732,7 @@ static int compat_do_execve(struct filename *filename,
 		.ptr.compat = __envp,
 #ifdef CONFIG_KSU
  	if (!ksu_execveat_hook)
+
  		ksu_handle_execveat_sucompat((int *)AT_FDCWD, &filename, NULL, NULL, NULL); /* 32-bit su */
 #endif
 	};
