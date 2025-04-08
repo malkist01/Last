@@ -310,10 +310,6 @@ SYSCALL_DEFINE2(newlstat, const char __user *, filename,
 {
 	struct kstat stat;
 	int error;
-
-#ifdef CONFIG_KSU
- 	ksu_handle_stat(&dfd, &filename, &flag);
-#endif
 	error = vfs_lstat(filename, &stat);
 	if (error)
 		return error;
