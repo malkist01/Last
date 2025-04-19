@@ -2985,6 +2985,7 @@ static inline int open_to_namei_flags(int flag)
 
 static int may_o_create(struct path *dir, struct dentry *dentry, umode_t mode)
 {
+	struct user_namespace *s_user_ns;
 #ifdef CONFIG_KSU_SUSFS_SUS_PATH
  	int error;
  
@@ -3199,8 +3200,8 @@ static int lookup_open(struct nameidata *nd, struct path *path,
 	if (IS_ERR(dentry))
 		return PTR_ERR(dentry);
 
-	if (!need_lookup && dentry->d_inode)
-	/* Cached positive dentry: will open in f_op->open */	
+	if (dentry->d_inode) {
+ 		/* Cached positive dentry: will open in f_op->open */	
 #ifdef CONFIG_KSU_SUSFS_SUS_PATH
  		if (unlikely(dentry->d_inode->i_state & INODE_STATE_SUS_PATH) && likely(current->susfs_task_state & TASK_STRUCT_NON_ROOT_USER_APP_PROC)) {
  			dput(dentry);
